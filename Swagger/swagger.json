@@ -1,0 +1,596 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This a Task-Manager App named TaskMan, built in NodeJs with use of ExpressJS framework, MongoDB database and for authorization we used JWT. Our API is up on https://dee-my-task-manager.herokuapp.com/ Link. Please Visit Once!",
+    "version": "1.0.0",
+    "title": "TaskMan"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "securityDefinitions": {
+    "bearerAuth": {
+      "name": "Authorization",
+      "in": "header",
+      "type": "apiKey",
+      "description": "JWT Authorization header"
+    }
+  },
+  "tags": [
+    {
+      "name": "General",
+      "description": "General options for all"
+    },
+    {
+      "name": "User",
+      "description": "Operations for User"
+    },
+    {
+      "name": "Task",
+      "description": "Access to tasks"
+    }
+  ],
+  "schemes": ["https", "http"],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["General"],
+        "summary": "Signup Function",
+        "description": "",
+        "operationId": "addUser",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User object that needs for signup",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/signup"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully SignUp"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["General"],
+        "summary": "Login Function",
+        "description": "",
+        "operationId": "loginUser",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User object that needs for Login",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Login"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["General"],
+        "summary": "Get OtherUser",
+        "description": "",
+        "operationId": "getotherUser",
+        "consumes": [],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Id to get Another User Profile"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Loaded User Profile"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get Profile",
+        "description": "",
+        "operationId": "userProfile",
+        "consumes": [],
+        "produces": ["application/json"],
+        "parameters": [],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successfully Profile Displayed"
+          },
+          "401": {
+            "description": "Please Authenticate!"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update Profile",
+        "description": "",
+        "operationId": "upadateProfile",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User object for profile update",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/update"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successfully Profile Updated"
+          },
+          "401": {
+            "description": "Please Authenticate!"
+          },
+          "500": {
+            "description": "Server Error!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User"],
+        "summary": "Delete Profile",
+        "description": "",
+        "operationId": "deleteProfile",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully Profile Deleted"
+          },
+          "401": {
+            "description": "Please Authenticate!"
+          },
+          "500": {
+            "description": "Server Error!"
+          }
+        }
+      }
+    },
+    "/users/{id}/avatar": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get Avatar",
+        "description": "",
+        "operationId": "getAvatar",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": [],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Id to get Avatar"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avatar loaded Successfully!"
+          },
+          "401": {
+            "description": "Please Authenticate!"
+          },
+          "404": {
+            "description": "User Not Found!"
+          },
+          "500": {
+            "description": "Server Error!"
+          }
+        }
+      }
+    },
+    "/users/me/avatar": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Upload Avatar",
+        "description": "",
+        "operationId": "uploadAvatar",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "avatar",
+            "type": "file",
+            "required": true,
+            "description": "The file to upload."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avatar uploaded Successfully!"
+          },
+          "401": {
+            "description": "Please Authenticate!"
+          },
+          "400": {
+            "description": "Bad Request!"
+          },
+          "500": {
+            "description": "Server Error!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User"],
+        "summary": "Delete Avatar",
+        "description": "",
+        "operationId": "deleteAvatar",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": [],
+        "produces": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Avatar deleted Successfully!"
+          },
+          "401": {
+            "description": "Please Authenticate!"
+          },
+          "404": {
+            "description": "User Not Found!"
+          },
+          "500": {
+            "description": "Server Error!"
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Logout Function",
+        "description": "",
+        "operationId": "logoutUser",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": [],
+        "produces": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Logout Successfully!"
+          },
+          "401": {
+            "description": "Please Authenticate!"
+          },
+          "500": {
+            "description": "Server Error!"
+          }
+        }
+      }
+    },
+    "/users/logoutAll": {
+      "post": {
+        "tags": ["User"],
+        "summary": "LogoutAll Function",
+        "description": "",
+        "operationId": "logoutAllUser",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": [],
+        "produces": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Logout from all Successfully!"
+          },
+          "401": {
+            "description": "Please Authenticate!"
+          },
+          "500": {
+            "description": "Server Error!"
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "post": {
+        "tags": ["Task"],
+        "summary": "Add Task",
+        "description": "",
+        "operationId": "addTask",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Task object to create task",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/task"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully task Created"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Task"],
+        "summary": "Get All Tasks",
+        "description": "",
+        "operationId": "getAllTasks",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": [],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "compeleted",
+            "enum": [true, false],
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter Task Based on Completion"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The number of items to skip before starting to collect the result set"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The numbers of items to return"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "enum": ["createdAt:desc", "createdAt:asc"],
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sort Based on Created Time"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Loaded all tasks"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "tags": ["Task"],
+        "summary": "Get a Task",
+        "description": "",
+        "operationId": "getTask",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": [],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Task's ID that you want to Get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Loaded A task"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Task"],
+        "summary": "Update Task",
+        "description": "",
+        "operationId": "UpdateTask",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task's Id for update"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Task object to create task",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/updateTask"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successfully task Loaded"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Task not found"
+          },
+          "412": {
+            "description": "Invalid Updates!"
+          },
+          "500": {
+            "description": "Server Error!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Task"],
+        "summary": "Delete Task",
+        "description": "",
+        "operationId": "deleteTask",
+        "security": [{ "bearerAuth": [] }],
+        "consumes": [],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Task's ID that you want to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Deleted Task"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "signup": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "xml": {
+        "name": "signup"
+      }
+    },
+    "login": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "login"
+      }
+    },
+    "update": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "xml": {
+        "name": "update"
+      }
+    },
+    "task": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "compeleted": {
+          "type": "boolean"
+        },
+        "owner": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "task"
+      }
+    },
+    "updateTask": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "compeleted": {
+          "type": "boolean"
+        }
+      },
+      "xml": {
+        "name": "updateTask"
+      }
+    }
+  }
+}
