@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "This a Task-Manager App named TaskMan, built in NodeJs with use of ExpressJS framework, MongoDB database and for authorization we used JWT. Our API is up on https://dee-my-task-manager.herokuapp.com/ Link. Please Visit Once!",
+    "description": "This a Task-Manager App named TaskMan, built-in NodeJs with the use of ExpressJS framework, MongoDB database, and for authorization we used JWT.",
     "version": "1.0.0",
     "title": "TaskMan"
   },
